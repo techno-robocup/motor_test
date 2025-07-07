@@ -1,0 +1,3 @@
+[submodule "robocup2025_esp32_library"]
+	path = lib
+	url = https://github.com/techno-robocup/robocup2025_esp32_library.git
