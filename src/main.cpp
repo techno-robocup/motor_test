@@ -32,6 +32,7 @@ void motor_task_func(void* arg) {
     tyre_3_motor.run_msec(tyre_values[2]);
     tyre_4_motor.run_msec(tyre_values[3]);
   }
+  vTaskDelay(10);
 }
 
 // Optimized string parsing without String operations
@@ -90,6 +91,6 @@ void loop() {
     tyre_values[0] = tyre_values[1] = tyre_values[2] = tyre_values[3] = i;
     serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " + String(tyre_values[1]) +
                                       " " + String(tyre_values[2]) + " " + String(tyre_values[3])));
-    delay(100);
   }
+  vTaskDelay(100);
 }
