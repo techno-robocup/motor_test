@@ -85,10 +85,11 @@ void setup() {
 }
 
 void loop() {
-  for(int i=1000; i<=2000; i+=10){
+  for (int i = 1000; i <= 2000; i += 10) {
     MutexGuard guard(motor_sem);
-    tyre_values[0]=tyre_values[1]=tyre_values[2]=tyre_values[3]=i;
-    serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " + String(tyre_values[1]) + " " + String(tyre_values[2]) + " " + String(tyre_values[3])));
+    tyre_values[0] = tyre_values[1] = tyre_values[2] = tyre_values[3] = i;
+    serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " + String(tyre_values[1]) +
+                                      " " + String(tyre_values[2]) + " " + String(tyre_values[3])));
     delay(100);
   }
 }
