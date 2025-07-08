@@ -9,7 +9,7 @@ constexpr int tyre_1 = 13, tyre_2 = 14, tyre_3 = 15, tyre_4 = 16;
 constexpr int button_pin = 21;
 constexpr int arm_feedback = 34, arm_pulse = 17;
 constexpr int wire_SIG = 32;
-constexpr int tyre_interval = 40;
+constexpr int tyre_interval = 60;
 
 // Fixed array size to match actual usage (4 motors, not 2)
 int tyre_values[4] = {1500, 1500, 1500, 1500};
