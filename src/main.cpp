@@ -12,7 +12,7 @@ constexpr int wire_SIG = 32;
 constexpr int tyre_interval = 60;
 
 // Fixed array size to match actual usage (4 motors, not 2)
-int tyre_values[4] = {1500, 1500, 1500, 1500};
+int tyre_values[4] = {1000000, 1000000, 1000000, 1000000};
 int arm_value = 0;
 bool wire = false;
 
@@ -31,9 +31,10 @@ void motor_task_func(void* arg) {
     tyre_2_motor.run_msec(tyre_values[1]);
     tyre_3_motor.run_msec(tyre_values[2]);
     tyre_4_motor.run_msec(tyre_values[3]);
-    serial.sendMessage(Message(1, "ON motor_task_func"));
+
+    vTaskDelay(pdMS_TO_TICKS(100));
+    serial.sendMessage(Message(1, "motor_task_func running"));
   }
-  vTaskDelay(10);
 }
 
 // Optimized string parsing without String operations
@@ -83,21 +84,21 @@ void setup() {
   - Task handle
   - Core ID
   */
-  // xTaskCreatePinnedToCore(.
-
-  // motor_task_func, "MotorTask", 2048, nullptr, 1, &motor_task, 1);
+  xTaskCreatePinnedToCore(motor_task_func, "MotorTask", 2048, nullptr, 1, &motor_task, 1);
 }
 
 void loop() {
-  for (int i = 1000; i <= 2000; i += 10) {
-    MutexGuard guard(motor_sem);
-    tyre_values[0] = tyre_values[1] = tyre_values[2] = tyre_values[3] = i;
-    tyre_1_motor.run_msec(tyre_values[0]);
-    tyre_2_motor.run_msec(tyre_values[1]);
-    tyre_3_motor.run_msec(tyre_values[2]);
-    tyre_4_motor.run_msec(tyre_values[3]);
-    serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " + String(tyre_values[1]) +
-                                      " " + String(tyre_values[2]) + " " + String(tyre_values[3])));
-  }
+  // for (int i = 1000; i <= 2000; i += 10) {
+  //   MutexGuard guard(motor_sem);
+  //   tyre_values[0] = tyre_values[1] = tyre_values[2] = tyre_values[3] = i;
+  //   tyre_1_motor.run_msec(tyre_values[0]);
+  //   tyre_2_motor.run_msec(tyre_values[1]);
+  //   tyre_3_motor.run_msec(tyre_values[2]);
+  //   tyre_4_motor.run_msec(tyre_values[3]);
+  //   serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " +
+  //   String(tyre_values[1]) +
+  //                                     " " + String(tyre_values[2]) + " " +
+  //                                     String(tyre_values[3])));
+  // }
   // vTaskDelay(100);
 }
