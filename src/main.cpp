@@ -83,15 +83,23 @@ void setup() {
   - Task handle
   - Core ID
   */
-  xTaskCreatePinnedToCore(motor_task_func, "MotorTask", 2048, nullptr, 1, &motor_task, 1);
+  // xTaskCreatePinnedToCore(.
+  
+  
+  
+  // motor_task_func, "MotorTask", 2048, nullptr, 1, &motor_task, 1);
 }
 
 void loop() {
   for (int i = 1000; i <= 2000; i += 10) {
     MutexGuard guard(motor_sem);
     tyre_values[0] = tyre_values[1] = tyre_values[2] = tyre_values[3] = i;
+    tyre_1_motor.run_msec(tyre_values[0]);
+    tyre_2_motor.run_msec(tyre_values[1]);
+    tyre_3_motor.run_msec(tyre_values[2]);
+    tyre_4_motor.run_msec(tyre_values[3]);
     serial.sendMessage(Message(1, "MOTOR " + String(tyre_values[0]) + " " + String(tyre_values[1]) +
                                       " " + String(tyre_values[2]) + " " + String(tyre_values[3])));
   }
-  vTaskDelay(100);
+  // vTaskDelay(100);
 }
