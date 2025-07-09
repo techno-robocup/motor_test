@@ -12,7 +12,7 @@ constexpr int wire_SIG = 32;
 constexpr int tyre_interval = 60;
 
 // Fixed array size to match actual usage (4 motors, not 2)
-int tyre_values[4] = {1000000, 1000000, 1000000, 1000000};
+int tyre_values[4] = {1700, 1700, 1700, 1700};
 int arm_value = 0;
 bool wire = false;
 
@@ -32,7 +32,7 @@ void motor_task_func(void* arg) {
     tyre_3_motor.run_msec(tyre_values[2]);
     tyre_4_motor.run_msec(tyre_values[3]);
 
-    vTaskDelay(pdMS_TO_TICKS(100));
+    // vTaskDelay(pdMS_TO_TICKS(100));
     serial.sendMessage(Message(1, "motor_task_func running"));
   }
 }
