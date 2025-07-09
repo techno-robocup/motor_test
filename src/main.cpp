@@ -9,7 +9,7 @@ constexpr int tyre_1 = 13, tyre_2 = 14, tyre_3 = 15, tyre_4 = 16;
 constexpr int button_pin = 21;
 constexpr int arm_feedback = 34, arm_pulse = 17;
 constexpr int wire_SIG = 32;
-constexpr int tyre_interval = 60;
+constexpr int tyre_interval = 1500;
 
 // Fixed array size to match actual usage (4 motors, not 2)
 int tyre_values[4] = {1700, 1700, 1700, 1700};
@@ -24,16 +24,25 @@ inline int readbutton() { return digitalRead(button_pin); }
 TaskHandle_t motor_task;
 SemaphoreHandle_t motor_sem = xSemaphoreCreateMutex();
 
+long double current_speed = 1000.0;
+
 void motor_task_func(void* arg) {
   while (true) {
+    current_speed += 0.1;
+    if (current_speed > 2000) current_speed = 1000.0;
     MutexGuard guard(motor_sem);
-    tyre_1_motor.run_msec(tyre_values[0]);
-    tyre_2_motor.run_msec(tyre_values[1]);
-    tyre_3_motor.run_msec(tyre_values[2]);
-    tyre_4_motor.run_msec(tyre_values[3]);
+    // tyre_1_motor.run_msec((int)current_speed);
+    // tyre_2_motor.run_msec((int)current_speed);
+    // tyre_3_motor.run_msec((int)current_speed);
+    // tyre_4_motor.run_msec((int)current_speed);
+    tyre_1_motor.run_msec(1500);
+    tyre_2_motor.run_msec(1500);
+    tyre_3_motor.run_msec(1500);
+    tyre_4_motor.run_msec(1500);
 
     // vTaskDelay(pdMS_TO_TICKS(100));
-    serial.sendMessage(Message(1, "motor_task_func running"));
+    // serial.sendMessage(Message(1, "motor_task_func running"));
+    // vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
 
@@ -72,6 +81,7 @@ bool parseMotorCommand(const char* message, int* values, int max_values) {
 }
 
 void setup() {
+  esp_task_wdt_deinit();
   serial.init();
   pinMode(button_pin, INPUT);
   /*
@@ -84,7 +94,7 @@ void setup() {
   - Task handle
   - Core ID
   */
-  xTaskCreatePinnedToCore(motor_task_func, "MotorTask", 2048, nullptr, 1, &motor_task, 1);
+  xTaskCreatePinnedToCore(motor_task_func, "MotorTask", 10000, nullptr, 1, &motor_task, 0);
 }
 
 void loop() {
@@ -101,4 +111,5 @@ void loop() {
   //                                     String(tyre_values[3])));
   // }
   // vTaskDelay(100);
+  Serial.println((int)current_speed);
 }
